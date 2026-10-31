@@ -27,3 +27,6 @@ celery
 redis
 requests
 django-cors-headers
+gunicorn
+whitenoise
+dj-database-url
