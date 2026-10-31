@@ -38,13 +38,15 @@ INSTALLED_APPS = [
     "django_filters",
     "drf_spectacular",
     "accounts",
-    "tickets"
+    "tickets",
+    "corsheaders",
 ]
 
 AUTH_USER_MODEL = "accounts.User"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -186,3 +188,9 @@ DEFAULT_FROM_EMAIL = "support@example.com"
 # AI reply drafts (Groq). The key comes from the environment, never from code.
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "")
 GROQ_MODEL = os.environ.get("GROQ_MODEL", "openai/gpt-oss-20b")
+
+# Frontends allowed to call this API from a browser.
+# In production, set CORS_ALLOWED_ORIGINS to your real frontend URL.
+CORS_ALLOWED_ORIGINS = os.environ.get(
+    "CORS_ALLOWED_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173"
+).split(",")

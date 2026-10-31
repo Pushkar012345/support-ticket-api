@@ -26,3 +26,4 @@ uritemplate==4.2.0
 celery
 redis
 requests
+django-cors-headers

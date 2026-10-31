@@ -213,3 +213,11 @@ def test_customer_cannot_see_ai_draft_but_agent_can(customer, agent):
 
     res = client_for(agent).get(f"/api/tickets/{ticket.id}/")
     assert res.data["ai_suggested_reply"] == "Draft reply"
+
+def test_only_admin_can_list_agents(customer, agent, admin):
+    assert client_for(customer).get("/api/auth/agents/").status_code == 403
+    assert client_for(agent).get("/api/auth/agents/").status_code == 403
+
+    res = client_for(admin).get("/api/auth/agents/")
+    assert res.status_code == 200
+    assert [a["username"] for a in res.data] == ["agent1"]
