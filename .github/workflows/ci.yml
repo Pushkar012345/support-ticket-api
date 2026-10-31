@@ -1,0 +1,41 @@
+name: CI
+
+# Run on every push to main and on every pull request
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    # A real Postgres container, same as in Docker, so tests run against what you deploy
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: tickets
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-retries 10
+
+    # settings.py sees POSTGRES_DB and switches to PostgreSQL
+    env:
+      POSTGRES_DB: tickets
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST: localhost
+
+    steps:
+      - uses: actions/checkout@v4          # download your code
+      - uses: actions/setup-python@v5      # install Python
+        with:
+          python-version: "3.13"
+          cache: pip                       # reuse downloaded packages between runs
+      - run: pip install -r requirements.txt
+      - run: pytest -q                     # fails the build if any test fails
