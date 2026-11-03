@@ -210,3 +210,8 @@ if os.environ.get("DATABASE_URL"):
     DATABASES = {"default": dj_database_url.parse(os.environ["DATABASE_URL"], conn_max_age=600)}
 elif os.environ.get("POSTGRES_DB"):
     ...  # your existing Postgres block, unchanged
+
+
+CORS_ALLOWED_ORIGINS = [
+    o.strip() for o in os.environ.get("CORS_ALLOWED_ORIGINS", "").split(",") if o.strip()
+]
